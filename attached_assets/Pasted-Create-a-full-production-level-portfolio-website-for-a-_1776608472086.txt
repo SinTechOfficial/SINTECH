@@ -1,0 +1,32 @@
+Create a full production level portfolio website for a software company called "SinTech" with the motto "Tech is the Solution."
+Brand: Dark navy blue (#0f1f3d) and electric blue (#1e4ab8) with white text and a bright blue accent (#4f8ef7). Use Google Fonts — Syne (headings) and DM Sans (body). Add a subtle grid background, glowing radial gradients, and scroll-reveal animations.
+Sections to include:
+
+Fixed Navbar — Logo with SVG icon, nav links (About, Services, Team, Contact), CTA button, shrinks on scroll, mobile hamburger menu.
+Hero — Full-screen with animated badge, large bold headline, subtitle with the motto, two CTA buttons (Explore Services / Start a Project), and floating stats (15+ Team Members, 7+ Services).
+About — Two-column layout: left is a styled card with company description and tech tags plus a floating "100% Client Focused" badge; right lists three company values (Innovation, Partnership, Quality) each with an icon and description.
+Services — 3-column grid of 6 cards: Software Development, Website Development, Mobile App Development, QA & Testing, Research & Data Analysis, UI/UX & Graphic Design. Each card has an emoji icon, title, description, and a hover top-border animation.
+Team — First row: 3 wide "founder cards" (horizontal layout with circular photo) for the Founder, Co-Founder (Management), and Co-Founder (Marketing). Second section: 5-column grid of member cards with photo, name, role, and department badge for the remaining 12 team members. Photos are referenced from a local images/ folder.
+Contact — Two columns: left has section heading, description, and contact info cards (Email, Website, Location); right has a styled contact form (Name, Email, Service dropdown, Message, Submit button).
+Footer — 4-column layout (brand + tagline, Company links, Services links, Connect links), bottom bar with copyright and social icon links.
+
+Technical requirements: Pure HTML/CSS/JS in one file. CSS variables for theming. Scroll-reveal via IntersectionObserver. Smooth scroll on all anchor links. Responsive at 900px breakpoint. No external libraries except Google Fonts.
+Team members to include:
+
+Mostafic Yellahy Najid — Founder & Lead Architect (images/Nahid.jpg)
+Iftikher Rahman Ifti — Co-Founder & Management Head (images/iFTI.png)
+Samir Hossain Sobuj — Co-Founder & Marketing Head (images/Sobuj.png)
+Monira Islam Eva — General Manager (images/Eva.jpg)
+Enamul Hakim Khan — Lead Developer (images/fAHIM.png)
+Ashraful Islam — Lead Designer & QA (images/Ashraful.png)
+Md Mahbul Islam — Coder (images/Mahbub.jpg)
+Shahed Ahmed Sium — Coder (images/Sium.png)
+Rifat Ahmed Ratul — QA Engineer (images/Ratul.jpg)
+Ashraful Haque Akash — Researcher (images/Akash.png)
+Md Emon Hossain — Researcher (images/Emon.jpg)
+Farhan Alam — Graphics Designer (images/Farhan.jpg)
+Mairea — Designer (images/Mariea.png)
+Tahrim Maria — Designer (images/Asha.png)
+Tanzina Akter Tanni — HR (images/tANNI.png)
+
+Contact info: sintech11395@gmail.com | Dhaka, Bangladesh
