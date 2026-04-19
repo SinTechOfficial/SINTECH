@@ -15,7 +15,7 @@ const getBadgeColor = (dept: string) => {
 };
 
 const founders = [
-  { name: "Mostafic Yellahy Najid", role: "Founder & Lead Architect", img: "/images/Nahid.jpg", quote: "Architecting the future of scalable systems." },
+  { name: "Mostafic Yellahy Nahid", role: "Founder & Lead Architect", img: "/images/Nahid.jpg", quote: "Architecting the future of scalable systems." },
   { name: "Iftikher Rahman Ifti", role: "Co-Founder & Management Head", img: "/images/iFTI.png", quote: "Driving operational excellence and growth." },
   { name: "Samir Hossain Sobuj", role: "Co-Founder & Marketing Head", img: "/images/Sobuj.png", quote: "Connecting our vision with global clients." }
 ];
