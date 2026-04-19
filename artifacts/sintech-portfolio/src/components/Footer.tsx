@@ -1,5 +1,7 @@
 import React from "react";
-import { Zap, Mail, Linkedin, Github, Twitter } from "lucide-react";
+import { Mail, Linkedin, Github, Twitter } from "lucide-react";
+import { Link } from "wouter";
+import { SinTechMark } from "./Navbar";
 
 export function Footer() {
   return (
@@ -14,7 +16,7 @@ export function Footer() {
           <div className="flex flex-col">
             <div className="flex items-center gap-2 mb-6">
               <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-white">
-                <Zap className="w-6 h-6" fill="currentColor" />
+                <SinTechMark className="w-6 h-6" />
               </div>
               <span className="font-heading font-bold text-2xl tracking-tight">SinTech</span>
             </div>
@@ -27,10 +29,10 @@ export function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-6">Company</h4>
             <ul className="space-y-4">
-              <li><a href="#about" className="text-foreground/60 hover:text-primary transition-colors">About Us</a></li>
-              <li><a href="#services" className="text-foreground/60 hover:text-primary transition-colors">Services</a></li>
-              <li><a href="#team" className="text-foreground/60 hover:text-primary transition-colors">Team</a></li>
-              <li><a href="#contact" className="text-foreground/60 hover:text-primary transition-colors">Contact</a></li>
+              <li><Link href="/about" className="text-foreground/60 hover:text-primary transition-colors">About Us</Link></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Services</Link></li>
+              <li><Link href="/team" className="text-foreground/60 hover:text-primary transition-colors">Team</Link></li>
+              <li><Link href="/contact" className="text-foreground/60 hover:text-primary transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -38,12 +40,12 @@ export function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-6">Services</h4>
             <ul className="space-y-4">
-              <li><a href="#services" className="text-foreground/60 hover:text-primary transition-colors">Software Development</a></li>
-              <li><a href="#services" className="text-foreground/60 hover:text-primary transition-colors">Web Development</a></li>
-              <li><a href="#services" className="text-foreground/60 hover:text-primary transition-colors">Mobile Apps</a></li>
-              <li><a href="#services" className="text-foreground/60 hover:text-primary transition-colors">QA & Testing</a></li>
-              <li><a href="#services" className="text-foreground/60 hover:text-primary transition-colors">Research & Data</a></li>
-              <li><a href="#services" className="text-foreground/60 hover:text-primary transition-colors">UI/UX Design</a></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Software Development</Link></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Web Development</Link></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Mobile Apps</Link></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">QA & Testing</Link></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">Research & Data</Link></li>
+              <li><Link href="/services" className="text-foreground/60 hover:text-primary transition-colors">UI/UX Design</Link></li>
             </ul>
           </div>
 

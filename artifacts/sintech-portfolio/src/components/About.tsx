@@ -42,7 +42,7 @@ export function About() {
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-accent mb-4">Our Tech Stack</h4>
                 <div className="flex flex-wrap gap-2">
                   {['React', 'Node.js', 'Flutter', 'Python', 'TypeScript', 'Next.js', 'AWS', 'Figma'].map(tech => (
-                    <span key={tech} className="px-3 py-1.5 bg-primary/10 border border-primary/20 text-primary-foreground text-sm rounded-full">
+                    <span key={tech} className="px-3 py-1.5 bg-primary/10 border border-primary/20 text-primary-foreground text-sm rounded-full hover:bg-primary/20 hover:border-primary/40 cursor-default transition-colors">
                       {tech}
                     </span>
                   ))}
@@ -52,7 +52,7 @@ export function About() {
             
             <div className="absolute -bottom-6 -right-6 bg-primary text-white p-6 rounded-2xl shadow-xl z-20 hidden md:block">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center animate-pulse">
                   <HeartHandshake className="w-6 h-6" />
                 </div>
                 <div>

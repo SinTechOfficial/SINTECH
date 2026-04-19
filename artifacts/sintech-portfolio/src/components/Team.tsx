@@ -61,9 +61,9 @@ export function Team() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl p-6 flex items-center gap-6 group hover:border-primary/50 transition-colors"
+              className="bg-card/50 backdrop-blur-sm border border-primary/20 rounded-2xl p-8 flex items-center gap-6 group hover:border-primary/50 hover:shadow-[0_0_30px_rgba(30,74,184,0.3)] transition-all"
             >
-              <Avatar className="w-20 h-20 border-2 border-primary/50 shadow-lg shrink-0">
+              <Avatar className="w-24 h-24 border-2 border-primary/50 shadow-lg shrink-0">
                 <AvatarImage src={person.img} className="object-cover" />
                 <AvatarFallback className="text-xl bg-primary text-white">{person.name.charAt(0)}</AvatarFallback>
               </Avatar>
@@ -87,7 +87,7 @@ export function Team() {
               transition={{ delay: i * 0.05 }}
               className="bg-card border border-white/5 rounded-xl p-6 flex flex-col items-center text-center group hover:bg-white/5 transition-colors"
             >
-              <Avatar className="w-24 h-24 mb-4 border border-white/10 group-hover:scale-105 transition-transform duration-300">
+              <Avatar className="w-24 h-24 mb-4 border border-white/10 group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(79,142,247,0.4)] transition-all duration-300">
                 <AvatarImage src={person.img} className="object-cover" />
                 <AvatarFallback className="text-2xl bg-card text-foreground">{person.name.charAt(0)}</AvatarFallback>
               </Avatar>

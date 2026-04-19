@@ -12,7 +12,7 @@ const FloatingShape = ({
   duration,
   delay 
 }: { 
-  type: "cube" | "ring" | "hexagon" | "pyramid"; 
+  type: "browser" | "code" | "phone" | "cursor" | "terminal"; 
   size: number; 
   color: string; 
   initialPosition: { x: string; y: string }; 
@@ -22,33 +22,58 @@ const FloatingShape = ({
 }) => {
   const getShape = () => {
     switch (type) {
-      case "cube":
+      case "browser":
         return (
-          <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          <svg width={size} height={size} viewBox="0 0 80 60" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="1" y="1" width="78" height="58" rx="6"></rect>
+            <path d="M1 17h78M1 17a6 6 0 0 0 6-6V1a6 6 0 0 0-6 6z" stroke="none" fill="currentColor" opacity="0.1" />
+            <line x1="1" y1="17" x2="79" y2="17"></line>
+            <circle cx="12" cy="9" r="3"></circle>
+            <circle cx="22" cy="9" r="3"></circle>
+            <circle cx="32" cy="9" r="3"></circle>
+            <rect x="40" y="5" width="30" height="8" rx="3"></rect>
+            <line x1="8" y1="28" x2="52" y2="28"></line>
+            <line x1="8" y1="36" x2="52" y2="36"></line>
+            <line x1="8" y1="44" x2="52" y2="44"></line>
+            <rect x="56" y="22" width="16" height="28"></rect>
           </svg>
         );
-      case "ring":
+      case "code":
         return (
-          <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <circle cx="12" cy="12" r="6"></circle>
+          <svg width={size} height={size} viewBox="0 0 60 40" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="18,5 8,20 18,35"></polyline>
+            <polyline points="42,5 52,20 42,35"></polyline>
+            <line x1="34" y1="5" x2="26" y2="35"></line>
           </svg>
         );
-      case "hexagon":
+      case "phone":
         return (
-          <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <svg width={size} height={size} viewBox="0 0 40 72" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="36" height="68" rx="6"></rect>
+            <circle cx="20" cy="63" r="4"></circle>
+            <rect x="6" y="12" width="28" height="44" rx="2"></rect>
+            <circle cx="20" cy="7" r="2"></circle>
           </svg>
         );
-      case "pyramid":
+      case "cursor":
         return (
-          <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 20h20L12 4z"></path>
-            <path d="M12 4v16"></path>
-            <path d="m12 4 4.5 16"></path>
+          <svg width={size} height={size} viewBox="0 0 30 36" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="4,2 4,28 10,22 16,34 20,32 14,20 22,20"></polygon>
+          </svg>
+        );
+      case "terminal":
+        return (
+          <svg width={size} height={size} viewBox="0 0 80 56" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="1" y="1" width="78" height="54" rx="4"></rect>
+            <line x1="1" y1="15" x2="79" y2="15"></line>
+            <circle cx="10" cy="8" r="3"></circle>
+            <circle cx="18" cy="8" r="3"></circle>
+            <circle cx="26" cy="8" r="3"></circle>
+            <polyline points="8,26 12,28 8,30"></polyline>
+            <line x1="16" y1="28" x2="50" y2="28"></line>
+            <line x1="8" y1="38" x2="35" y2="38"></line>
+            <line x1="8" y1="48" x2="25" y2="48"></line>
+            <rect x="28" y="45" width="6" height="6" fill={color} opacity="0.7"></rect>
           </svg>
         );
     }
@@ -227,11 +252,11 @@ export function Hero() {
 
       {/* Floating 3D Shapes */}
       <div className="absolute inset-0 pointer-events-none transform-style-3d">
-        <FloatingShape type="cube" size={64} color="rgba(255,255,255,0.2)" initialPosition={{ x: "15%", y: "25%" }} depth={-200} duration={15} delay={0} />
-        <FloatingShape type="ring" size={48} color="rgba(79,142,247,0.4)" initialPosition={{ x: "80%", y: "15%" }} depth={100} duration={20} delay={2} />
-        <FloatingShape type="hexagon" size={80} color="rgba(255,255,255,0.15)" initialPosition={{ x: "85%", y: "65%" }} depth={-300} duration={18} delay={1} />
-        <FloatingShape type="pyramid" size={56} color="rgba(30,74,184,0.5)" initialPosition={{ x: "10%", y: "70%" }} depth={50} duration={12} delay={3} />
-        <FloatingShape type="cube" size={40} color="rgba(255,255,255,0.3)" initialPosition={{ x: "50%", y: "10%" }} depth={-400} duration={25} delay={5} />
+        <FloatingShape type="browser" size={80} color="rgba(79,142,247,0.3)" initialPosition={{ x: "15%", y: "25%" }} depth={-200} duration={18} delay={0} />
+        <FloatingShape type="code" size={60} color="rgba(255,255,255,0.2)" initialPosition={{ x: "82%", y: "18%" }} depth={100} duration={22} delay={2} />
+        <FloatingShape type="phone" size={56} color="rgba(255,255,255,0.15)" initialPosition={{ x: "87%", y: "65%" }} depth={-300} duration={16} delay={1} />
+        <FloatingShape type="cursor" size={44} color="rgba(79,142,247,0.4)" initialPosition={{ x: "8%", y: "70%" }} depth={50} duration={14} delay={3} />
+        <FloatingShape type="terminal" size={72} color="rgba(255,255,255,0.12)" initialPosition={{ x: "52%", y: "10%" }} depth={-400} duration={20} delay={5} />
       </div>
 
       <motion.div 

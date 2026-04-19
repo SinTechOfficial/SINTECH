@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { Link, useLocation } from "wouter";
 
-function SinTechMark({ className = "" }: { className?: string }) {
+export function SinTechMark({ className = "" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 80 80"
@@ -11,7 +12,6 @@ function SinTechMark({ className = "" }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Swirling interconnected blade shapes — SinTech spiral mark */}
       <g strokeLinecap="round" strokeLinejoin="round">
         {[0, 60, 120, 180, 240, 300].map((deg, i) => (
           <path
@@ -32,6 +32,7 @@ function SinTechMark({ className = "" }: { className?: string }) {
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,10 +42,9 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollTo = (id: string) => {
+  const handleNav = (href: string) => {
     setMobileMenuOpen(false);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    setLocation(href);
   };
 
   return (
@@ -57,9 +57,8 @@ export function Navbar() {
     >
       <div className="container mx-auto px-6 md:px-12 flex items-center justify-between">
         {/* Logo */}
-        <a
-          href="#"
-          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+        <Link
+          href="/"
           className="flex items-center gap-3 group"
         >
           <div className="relative w-10 h-10 flex items-center justify-center text-accent group-hover:text-white transition-colors duration-300">
@@ -74,21 +73,25 @@ export function Navbar() {
               Tech Is Solution
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          {["about", "services", "team", "contact"].map((id) => (
-            <button
-              key={id}
-              onClick={() => scrollTo(id)}
-              className="text-xs font-medium text-foreground/70 hover:text-accent transition-colors tracking-[0.12em] uppercase"
-            >
-              {id}
-            </button>
-          ))}
+          {[{id: 'about', label: 'ABOUT'}, {id: 'services', label: 'SERVICES'}, {id: 'team', label: 'TEAM'}, {id: 'contact', label: 'CONTACT'}].map(({ id, label }) => {
+            const path = `/${id}`;
+            const isActive = location === path;
+            return (
+              <Link
+                key={id}
+                href={path}
+                className={`text-xs font-medium tracking-[0.12em] uppercase transition-colors ${isActive ? 'text-accent' : 'text-foreground/70 hover:text-accent'}`}
+              >
+                {label}
+              </Link>
+            );
+          })}
           <Button
-            onClick={() => scrollTo("contact")}
+            onClick={() => handleNav("/contact")}
             className="bg-primary hover:bg-accent text-white font-medium px-6 rounded-full shadow-[0_0_15px_rgba(79,142,247,0.3)] hover:shadow-[0_0_25px_rgba(79,142,247,0.55)] transition-all duration-300 tracking-wider text-xs uppercase"
           >
             Get Started
@@ -113,17 +116,22 @@ export function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-full left-0 right-0 bg-card border-b border-border shadow-xl md:hidden flex flex-col p-6 gap-4"
           >
-            {["about", "services", "team", "contact"].map((id) => (
-              <button
-                key={id}
-                onClick={() => scrollTo(id)}
-                className="text-base font-medium text-left py-2 border-b border-border/50 text-foreground/80 hover:text-accent uppercase tracking-[0.12em]"
-              >
-                {id}
-              </button>
-            ))}
+            {[{id: 'about', label: 'ABOUT'}, {id: 'services', label: 'SERVICES'}, {id: 'team', label: 'TEAM'}, {id: 'contact', label: 'CONTACT'}].map(({ id, label }) => {
+              const path = `/${id}`;
+              const isActive = location === path;
+              return (
+                <Link
+                  key={id}
+                  href={path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`text-base font-medium text-left py-2 border-b border-border/50 uppercase tracking-[0.12em] ${isActive ? 'text-accent' : 'text-foreground/80 hover:text-accent'}`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
             <Button
-              onClick={() => scrollTo("contact")}
+              onClick={() => handleNav("/contact")}
               className="bg-primary hover:bg-accent text-white font-medium w-full mt-4 rounded-xl tracking-wider text-xs uppercase"
             >
               Get Started

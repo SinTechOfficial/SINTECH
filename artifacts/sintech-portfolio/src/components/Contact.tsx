@@ -74,18 +74,18 @@ export function Contact() {
               <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground/80">Full Name</label>
-                  <Input placeholder="John Doe" className="bg-background/50 border-white/10 focus-visible:ring-primary h-12" />
+                  <Input placeholder="John Doe" className="bg-background/50 border-white/10 focus-visible:ring-primary focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(30,74,184,0.2)] h-12 transition-all" />
                 </div>
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground/80">Email Address</label>
-                  <Input type="email" placeholder="john@example.com" className="bg-background/50 border-white/10 focus-visible:ring-primary h-12" />
+                  <Input type="email" placeholder="john@example.com" className="bg-background/50 border-white/10 focus-visible:ring-primary focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(30,74,184,0.2)] h-12 transition-all" />
                 </div>
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground/80">Service Interested In</label>
-                  <select className="flex h-12 w-full items-center justify-between rounded-md border border-white/10 bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50">
-                    <option value="" disabled selected className="bg-card text-foreground">Select a service</option>
+                  <select defaultValue="" className="flex h-12 w-full items-center justify-between rounded-md border border-white/10 bg-background/50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(30,74,184,0.2)] focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all">
+                    <option value="" disabled className="bg-card text-foreground">Select a service</option>
                     <option value="software" className="bg-card text-foreground">Software Development</option>
                     <option value="web" className="bg-card text-foreground">Website Development</option>
                     <option value="mobile" className="bg-card text-foreground">Mobile App Development</option>
@@ -97,10 +97,10 @@ export function Contact() {
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground/80">Message</label>
-                  <Textarea placeholder="Tell us about your project..." className="bg-background/50 border-white/10 focus-visible:ring-primary min-h-[120px] resize-none" />
+                  <Textarea placeholder="Tell us about your project..." className="bg-background/50 border-white/10 focus-visible:ring-primary focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(30,74,184,0.2)] min-h-[120px] resize-none transition-all" />
                 </div>
                 
-                <Button className="w-full h-12 mt-4 bg-primary hover:bg-accent text-white font-bold text-lg rounded-xl transition-all duration-300">
+                <Button className="w-full h-14 mt-4 bg-primary hover:bg-accent text-white font-bold text-lg rounded-xl transition-all duration-300">
                   <Send className="w-5 h-5 mr-2" />
                   Submit Request
                 </Button>
