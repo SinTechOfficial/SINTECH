@@ -5,18 +5,26 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  ApiError,
+  ContactRequest,
+  ContactResponse,
+  HealthStatus,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +107,90 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Stores a contact request and returns an acknowledgement.
+ * @summary Submit a project inquiry
+ */
+export const getCreateContactSubmissionUrl = () => {
+  return `/api/contact`;
+};
+
+export const createContactSubmission = async (
+  contactRequest: ContactRequest,
+  options?: RequestInit,
+): Promise<ContactResponse> => {
+  return customFetch<ContactResponse>(getCreateContactSubmissionUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(contactRequest),
+  });
+};
+
+export const getCreateContactSubmissionMutationOptions = <
+  TError = ErrorType<ApiError>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContactSubmission>>,
+    TError,
+    { data: BodyType<ContactRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createContactSubmission>>,
+  TError,
+  { data: BodyType<ContactRequest> },
+  TContext
+> => {
+  const mutationKey = ["createContactSubmission"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createContactSubmission>>,
+    { data: BodyType<ContactRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createContactSubmission(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateContactSubmissionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createContactSubmission>>
+>;
+export type CreateContactSubmissionMutationBody = BodyType<ContactRequest>;
+export type CreateContactSubmissionMutationError = ErrorType<ApiError>;
+
+/**
+ * @summary Submit a project inquiry
+ */
+export const useCreateContactSubmission = <
+  TError = ErrorType<ApiError>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContactSubmission>>,
+    TError,
+    { data: BodyType<ContactRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createContactSubmission>>,
+  TError,
+  { data: BodyType<ContactRequest> },
+  TContext
+> => {
+  return useMutation(getCreateContactSubmissionMutationOptions(options));
+};

@@ -5,10 +5,17 @@
   "type": "module",
   "scripts": {
     "hello": "tsx ./src/hello.ts",
+    "export-contacts": "tsx ./src/export-contacts.ts",
+    "process-team-photos": "tsx ./src/process-team-photos.ts",
+    "generate-site-assets": "tsx ./src/generate-site-assets.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@workspace/db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "sharp": "^0.35.5",
     "tsx": "catalog:"
   }
 }

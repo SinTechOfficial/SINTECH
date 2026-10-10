@@ -1,3 +1,11 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+  <rect width="180" height="180" rx="36" fill="#0F1F3D"/>
+  <g stroke="#4F8EF7" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 90C90 50 124 26 143 49C161 72 140 107 113 111C86 115 62 94 68 75C73 58 95 52 107 67"/>
+    <path d="M90 90C130 90 154 124 131 143C108 161 73 140 69 113C65 86 86 62 105 68C122 73 128 95 113 107" transform="rotate(60 90 90)"/>
+    <path d="M90 90C130 90 154 124 131 143C108 161 73 140 69 113C65 86 86 62 105 68C122 73 128 95 113 107" transform="rotate(120 90 90)"/>
+    <path d="M90 90C130 90 154 124 131 143C108 161 73 140 69 113C65 86 86 62 105 68C122 73 128 95 113 107" transform="rotate(180 90 90)"/>
+    <path d="M90 90C130 90 154 124 131 143C108 161 73 140 69 113C65 86 86 62 105 68C122 73 128 95 113 107" transform="rotate(240 90 90)"/>
+    <path d="M90 90C130 90 154 124 131 143C108 161 73 140 69 113C65 86 86 62 105 68C122 73 128 95 113 107" transform="rotate(300 90 90)"/>
+  </g>
 </svg>

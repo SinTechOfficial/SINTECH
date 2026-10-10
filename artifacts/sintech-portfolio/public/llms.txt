@@ -1,0 +1,18 @@
+# SinTech
+
+SinTech is a software company. Its site describes software development, website development, mobile app development, QA and testing, research and data analysis, and UI/UX and graphic design.
+
+## Services
+
+- Software Development
+- Website Development
+- Mobile App Development
+- QA & Testing
+- Research & Data Analysis
+- UI/UX & Graphic Design
+
+## Contact
+
+Email: sintech11395@gmail.com
+
+Project case studies, client testimonials, and published insights are not currently provided on this site.

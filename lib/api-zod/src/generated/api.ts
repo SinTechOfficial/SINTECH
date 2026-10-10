@@ -14,3 +14,41 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Stores a contact request and returns an acknowledgement.
+ * @summary Submit a project inquiry
+ */
+export const createContactSubmissionBodyNameMax = 120;
+
+export const createContactSubmissionBodyEmailMax = 254;
+
+export const createContactSubmissionBodyPhoneMax = 40;
+
+export const createContactSubmissionBodyServiceMax = 120;
+
+export const createContactSubmissionBodyBudgetMax = 80;
+
+export const createContactSubmissionBodyTimelineMax = 80;
+
+export const createContactSubmissionBodyMessageMax = 5000;
+
+export const createContactSubmissionBodyWebsiteMax = 200;
+
+export const CreateContactSubmissionBody = zod.object({
+  name: zod.string().min(1).max(createContactSubmissionBodyNameMax),
+  email: zod.string().email().max(createContactSubmissionBodyEmailMax),
+  phone: zod.string().max(createContactSubmissionBodyPhoneMax).optional(),
+  service: zod.string().min(1).max(createContactSubmissionBodyServiceMax),
+  budget: zod.string().max(createContactSubmissionBodyBudgetMax).nullish(),
+  timeline: zod.string().max(createContactSubmissionBodyTimelineMax).nullish(),
+  message: zod.string().min(1).max(createContactSubmissionBodyMessageMax),
+  consent: zod.boolean(),
+  website: zod
+    .string()
+    .max(createContactSubmissionBodyWebsiteMax)
+    .optional()
+    .describe(
+      "Hidden anti-spam honeypot; must be empty for genuine submissions.",
+    ),
+});

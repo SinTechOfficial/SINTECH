@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: contact
+    description: Public contact form operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /contact:
+    post:
+      operationId: createContactSubmission
+      tags: [contact]
+      summary: Submit a project inquiry
+      description: Stores a contact request and returns an acknowledgement.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactRequest"
+      responses:
+        "201":
+          description: The inquiry was accepted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactResponse"
+        "400":
+          description: The request did not pass validation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Too many inquiries were submitted from this address.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +66,61 @@ components:
           type: string
       required:
         - status
+    ContactRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 40
+        service:
+          type: string
+          minLength: 1
+          maxLength: 120
+        budget:
+          type: ["string", "null"]
+          maxLength: 80
+        timeline:
+          type: ["string", "null"]
+          maxLength: 80
+        message:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        consent:
+          type: boolean
+        website:
+          type: string
+          maxLength: 200
+          description: Hidden anti-spam honeypot; must be empty for genuine submissions.
+      required:
+        - name
+        - email
+        - service
+        - message
+        - consent
+    ContactResponse:
+      type: object
+      properties:
+        accepted:
+          type: boolean
+        message:
+          type: string
+      required:
+        - accepted
+        - message
+    ApiError:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
 
