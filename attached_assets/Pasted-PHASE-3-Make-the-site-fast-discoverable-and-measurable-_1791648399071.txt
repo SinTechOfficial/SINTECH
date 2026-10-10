@@ -1,0 +1,27 @@
+PHASE 3: Make the site fast, discoverable and measurable. Follow the Part 0 ground rules.
+
+### A. Static prerendering for SEO (keep the Vite + wouter stack)
+Today it is a pure client-side SPA, so crawlers and link previews see an empty shell. Implement build-time prerendering of every public route: add `src/entry-server.tsx` (renders with wouter's `<Router ssrPath>`), switch the client to `hydrateRoot` where prerendered HTML exists, and add a build script that (1) builds the client, (2) builds the SSR bundle, (3) renders each route from a single route manifest (static routes + every published service/project/post slug) into `dist/public/<route>/index.html` with the correct per-route `<title>`, meta description, canonical, OG/Twitter tags and JSON-LD injected. Guard any browser-only code (window/document, IntersectionObserver, matchMedia) so SSR doesn't crash. Keep the existing production rewrite `/* -> /index.html` as the fallback. If this approach hits a hard blocker, explain the trade-offs and choose the lowest-risk alternative that still produces real HTML per route; do not leave the build broken.
+Check: `curl` of `/services/web-development` (or the real slug) returns full HTML with the h1 and unique title; hydration shows no console warnings.
+
+### B. Structured data and discovery
+Generate sitemap.xml and the route manifest from the same data. Add JSON-LD: Organization (with sameAs from provided socials), WebSite, Service (per service page), Article (posts), BreadcrumbList, FAQPage. Update llms.txt from the data files at build time. Generate a branded 1200x630 OG image per case study and post at build time (or one strong default if generation is too heavy) and reference it in meta.
+
+### C. Performance budget (measure, don't guess)
+Targets on mobile Lighthouse: LCP <= 2.5s, CLS <= 0.1, INP/TBT healthy, Performance >= 90, A11y >= 95, Best Practices >= 95, SEO 100. Use responsive images (srcset/sizes), AVIF/WebP, explicit dimensions, lazy loading below the fold, preload the LCP asset, no layout shift from fonts. Inspect the bundle (rollup visualizer), split heavy vendor chunks, and remove unused dependencies from `artifacts/sintech-portfolio/package.json` that no app code imports (e.g. recharts, embla, react-day-picker, input-otp, vaul, cmdk, next-themes, react-resizable-panels, date-fns; verify each before removal, and delete unused shadcn components only if nothing imports them). Report before/after numbers.
+
+### D. Analytics and conversion tracking (privacy-friendly, optional)
+Add an env-driven analytics loader (Plausible or Umami script via `VITE_ANALYTICS_URL` / `VITE_ANALYTICS_SITE_ID`); do nothing if unset. Track events: cta_click (with location), contact_step_complete, contact_submit_success, whatsapp_click, booking_click, case_study_view. No cookies by default, so no consent banner needed; if I later add cookie-based tools, add a compliant consent banner. Document the events in `docs/ANALYTICS.md`.
+
+### E. API hardening
+Add `helmet`, strict CORS to the site origin, request size limits, structured logging without PII, consistent error shape, and a `/api/healthz` that checks DB connectivity. Add a minimal auth-protected read-only endpoint (`GET /api/admin/contacts`, bearer `ADMIN_TOKEN` secret, disabled if the secret is unset) so I can see leads without opening the database.
+
+### F. Quality gates
+Add `@lhci/cli` (or a script using the lighthouse CLI) with budgets, an automated link checker for internal links, an axe-core accessibility check on key routes (Playwright if available), and a `pnpm run check` script that runs typecheck + build + these checks. Fix everything they find.
+
+### G. Optional stretch (do only if A-F are done and stable)
+- Bangla (bn) UI: lightweight i18n context with an EN/BN toggle (persist choice), Hind Siliguri or Noto Sans Bengali webfont, translate nav, footer, hero, CTAs, contact form and FAQ. Mark all Bangla copy "needs native review" in `CONTENT_TODO.md`.
+- Light/dark theme toggle with `prefers-color-scheme` default.
+
+### Phase 3 acceptance
+Prerendered HTML for every route, valid structured data (test with a validator or schema checker), Lighthouse targets met or an honest explanation of what blocks them, `pnpm run check` passes. Final report: summary of all three phases, remaining content I must supply, and recommended next steps (e.g. pursue ISO 27001 before claiming it, collect client testimonials, publish one article per month).

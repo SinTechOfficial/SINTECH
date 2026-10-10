@@ -1,0 +1,59 @@
+PHASE 1: Fix broken things, make the site trustworthy and correct. Do all items; verify each against its acceptance check.
+
+### 1. Hero buttons are dead
+`src/components/Hero.tsx` calls `document.getElementById("services")` and `("contact")`, which don't exist on the `/` route (Landing only has `#services-preview`). Fix: "Explore Services" scrolls smoothly to `#services-preview`; "Start a Project" navigates to `/contact` with wouter. Add smooth scrolling that respects reduced motion.
+Check: both buttons work on `/` at all widths.
+
+### 2. Routing hygiene
+- In `App.tsx` the `/` route uses an inline component that remounts on every render. Move it into a stable `HomePage` component using the shared layout.
+- Add scroll-to-top (and focus reset to the main heading) on route change.
+- Every page must have exactly one `<h1>` (About, Services, Team currently have none; Contact has duplicate heading blocks).
+- Replace `not-found.tsx` with an on-brand dark 404 using the shared layout, a friendly message and links to Home/Services/Contact. Remove the "Did you forget to add the page to the router?" text.
+
+### 3. Contact form that actually works (end to end)
+Currently `Contact.tsx` only calls `preventDefault`; the API has no contact endpoint; the DB schema is empty.
+- DB: add `lib/db/src/schema/contactSubmissions.ts` (id, name, email, phone nullable, service, budget nullable, timeline nullable, message, status default "new", createdAt, userAgent nullable) with drizzle-zod insert schema; export from `schema/index.ts`; run the db push.
+- API contract: add `POST /contact` to `openapi.yaml` (ContactRequest/ContactResponse, 201/400/429), run the Orval codegen.
+- Server: `artifacts/api-server/src/routes/contact.ts`, validate with the generated zod schema, trim and length-limit inputs, honeypot field (silently accept-and-drop bots), per-IP rate limit (5/hour; add `express-rate-limit`), limit JSON body size, store in DB, then send an email notification to the lead address if `RESEND_API_KEY` and `CONTACT_TO_EMAIL` secrets exist (use Resend over fetch, no heavy SDK). If the secrets are absent, still save the lead and log a clear warning. Never fail the user request just because email failed. Restrict CORS to the site origin in production. Add `scripts/src/export-contacts.ts` that exports submissions to CSV.
+- Client: rebuild the form with react-hook-form + zod using the generated api-client hook. Real `<label htmlFor>` for every field, `aria-invalid`/`aria-describedby` errors, a loading state, a clear success state ("Thanks, we'll reply to <email>") and a clear error state with the direct email as fallback. Fields: name, email, phone/WhatsApp (optional), service, message, consent checkbox. Hidden honeypot.
+- Make the contact email, website and location come from `src/data/site.ts`. The "Website: sintech.com" link currently points to "#": render it only if a real domain is provided.
+Check: submit from the UI -> row appears in the DB, validation errors show, rapid resubmits get 429, form is fully keyboard-operable.
+
+### 4. Team photos are unusable
+`public/images/*` are full social-media cards (names, roles, logos baked in), shown in 96px circles, so faces are tiny, text is clipped, and names appear twice. They total ~10.8 MB.
+- Write a one-off script (use `sharp`) that crops each card to just the person (the person is in the right/lower part of each card; check every result visually and tune per-person crop boxes in a config), outputs square portraits at 320px and 640px as WebP into `public/images/team/`, and a matching tiny blur placeholder. Keep originals untouched. If a person can't be cropped cleanly, fall back to an initials avatar and list them in `CONTENT_TODO.md` as needing a proper photo.
+- Move people into `src/data/team.ts` (name, role, department, photo, optional bio, optional linkedin). Keep name spellings exactly as they are now in `Team.tsx`; the founder's spelling was changed deliberately. Note in your report that his photo card says "Najid" so I can confirm.
+- Remove the invented founder quotes (make `quote` an optional field and leave empty).
+- Use `<img>` with width/height, `loading="lazy"`, `decoding="async"`, srcset, and a meaningful `alt` ("Portrait of <name>, <role>").
+Check: team page weighs < 800 KB of images; faces are clearly visible in the circles.
+
+### 5. Consistency and honesty of content
+- One brand spelling everywhere: "SinTech" (navbar currently shows "Sin Tech"). One tagline: "Tech is the Solution" (navbar shows "Tech Is Solution" at 9px; raise to >= 11px).
+- The hero says "7+ Services" but there are 6: derive counts from the data arrays. The Landing stats band duplicates the hero stats; make it show different, true facts or remove it. Remove unverifiable claims like "100% Client Focused" as a metric. In About, replace "premier technology partner... worldwide" with accurate wording based on the FILL IN positioning (or neutral wording if blank).
+- Social links: render only the ones provided in `site.ts`; replace the Twitter icon with X; add Facebook and WhatsApp (react-icons). Link Privacy and Terms to real pages (item 7).
+
+### 6. SEO and sharing basics
+- `index.html`: remove `maximum-scale=1` from the viewport (it blocks zoom). Add description, canonical (from `VITE_SITE_URL`, no hardcoded domain), theme-color, Open Graph + Twitter card tags.
+- Add a small `useDocumentMeta` hook (or react-helmet-async) so every route sets its own unique `<title>` and meta description.
+- Replace `public/favicon.svg` (currently an off-brand orange square) with the SinTech mark in brand blue, plus PNG sizes and apple-touch-icon.
+- Create a new 1200x630 `opengraph.jpg` that matches the CURRENT design (the existing one is a stale screenshot of an older design and is not referenced anywhere).
+- Add `public/robots.txt`, `public/sitemap.xml`, `public/llms.txt` (plain-language summary of who we are, services, contact), and Organization JSON-LD.
+- Trim the logo PNG's empty padding (the 1600x1600 canvas is mostly blank) and use the optimized logo where a raster is needed.
+
+### 7. Legal pages
+Create `/privacy` and `/terms` pages (dark theme, readable typography) with sensible plain-English drafts that match what the site actually does (contact form, optional analytics). Add a visible note: "Draft: have a lawyer review before relying on this." Link them from the footer.
+
+### 8. Accessibility pass
+- Skip-to-content link; `aria-label`, `aria-expanded`, `aria-controls` on the mobile menu button; visible `:focus-visible` rings everywhere; close the mobile menu on Escape and route change.
+- Service cards are click-only `<div>`s: convert to proper semantics (button/disclosure with aria-expanded) and make the key description visible WITHOUT requiring a click.
+- Wrap the app in framer-motion `<MotionConfig reducedMotion="user">` and add a `@media (prefers-reduced-motion: reduce)` block that stops infinite CSS/JS animations.
+- Fix contrast: small text in `text-primary` on dark (about 3.8:1) -> use the accent; button hover must not be white-on-#4f8ef7.
+- Remove ineffective code: `translateZ` style props on plain (non-motion) elements and invalid Tailwind classes such as `transform-style-3d` / `transform-origin-bottom` (use valid v4 utilities or drop them).
+
+### 9. Performance quick wins
+- Route-level code splitting with `React.lazy` + Suspense.
+- Hero: remove the 5 infinitely rotating 3D shapes and the `backgroundPosition`-animated grid; replace with a static grid and at most 1-2 slow opacity/transform-only ambient effects. Disable mouse-parallax on coarse pointers. Reduce huge blur radii.
+- Self-host Syne and DM Sans (`@fontsource-variable/*`), `font-display: swap`, preload the hero font.
+
+### Phase 1 acceptance
+Typecheck + build pass. A real lead can be submitted and stored. No dead buttons or `#` links remain. Lighthouse mobile on `/`: Accessibility >= 95, SEO >= 95, Performance >= 85 (report actual numbers). Give me the report described in rule 7.

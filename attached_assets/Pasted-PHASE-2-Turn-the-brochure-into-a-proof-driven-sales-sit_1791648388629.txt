@@ -1,0 +1,41 @@
+PHASE 2: Turn the brochure into a proof-driven sales site. Follow the ground rules from Part 0 (no invented facts; hide anything I haven't provided; track gaps in CONTENT_TODO.md).
+
+### A. Visual system refresh (keep the dark, premium feel)
+Define design tokens in `src/index.css` and use them everywhere:
+- Surfaces: page #0a1224, card #0f1f3d (the brand navy), raised card slightly lighter, hairline borders rgba(255,255,255,.08). Primary button #1e4ab8 (hover #2a5bd0), accent text/icons #4f8ef7. One accent only. Replace the rainbow department badges on the Team page with brand-blue tints plus a small icon per department.
+- Typography scale: Syne only for headings (display sizes with tight tracking), DM Sans for body at >= 16px, line-height 1.6. Consistent 8px spacing scale, section padding rhythm, max content width.
+- Motion: subtle scroll-reveal (fade + 12px rise, 400ms, once). Hover states with transform/opacity only. Everything disabled under reduced motion.
+- Replace emoji/inconsistent icons with one lucide icon style at consistent stroke width.
+
+### B. New homepage (this order)
+1. Hero: H1 from the positioning FILL IN (if blank, use "We design, build and test web, mobile and software products for growing businesses."). One primary CTA "Book a free consultation" (-> `/contact`, or the booking link if provided) and a secondary "See our work" (only if published projects exist; otherwise "Explore services"). Under the headline, a proof strip using ONLY true facts (team size, services count, based in Dhaka, plus anything I provided). Hero right side: a clean, static product-style visual built with CSS/SVG (browser + phone mockup showing abstract UI), not rotating icons.
+2. Logo strip: "Trusted by", only if I provided logos I own; else hide.
+3. Services: bento grid of the 6 services, each tile = icon, outcome-style one-liner, 3 key deliverables, link to its detail page.
+4. Featured work: up to 3 published projects as large cards (cover, title, one-line outcome, stack chips). Hide the whole section when none are published.
+5. Process: 6 steps (Discover, Design, Build, QA, Launch, Support) with a short, honest description each (src/data/process.ts).
+6. Tech stack: grouped logos (Frontend, Backend, Mobile, Data, QA, Design) restricted to technologies already named in the site copy.
+7. Testimonials: only if provided; else hide.
+8. Engagement models: 3 cards (Fixed-scope project, Dedicated team, Ongoing support/retainer): what it's for, what's included, how we work. No prices.
+9. Insights teaser (latest 3 posts, hidden if none), Team teaser (founders + "Meet the team"), FAQ (8 real questions, shadcn Accordion + FAQPage JSON-LD), final CTA band.
+
+### C. New and upgraded pages (all data-driven, each with unique title/description and one h1)
+- `/services/:slug` for each of the 6 services: hero, who it's for, what's included (deliverables), how we deliver (process), tech we use, engagement options, 3-5 FAQs, CTA. `/services` becomes an overview linking to them. Keep copy specific and modest; no unverifiable claims.
+- `/work` (filterable by service) and `/work/:slug` case-study template: problem, approach, solution, stack, outcome, screenshots, testimonial slot. Use `src/data/projects.ts` with a `published` flag. Ship 0 fake entries; create `docs/ADD_A_CASE_STUDY.md` explaining how I add a real one in 5 minutes. The Work page needs a graceful empty state ("Case studies coming soon, talk to us about your project").
+- `/about`: story, mission, 3 values, working principles (communication cadence, code review, QA gates, IP ownership and NDA: write these as policies only if I confirm; otherwise phrase as "ask us"), team teaser, certifications (only those I listed).
+- `/team`: founders prominent, then department filter chips (animated layout), cards with optional bio + LinkedIn, and a "We're hiring? Careers" link.
+- `/careers`: culture blurb + "open roles" list from data (empty state with a general-application email CTA).
+- `/insights` + `/insights/:slug`: simple blog from `src/data/posts.ts` (markdown-ish body rendered with @tailwindcss/typography, reading time, tags). Create 3 draft post outlines marked `published: false` as examples I can finish.
+- `/security`: an honest "How we protect your project" page (access control, code review, backups, NDA on request). Do NOT claim certifications or compliance. Phrase only what I confirm; leave other items as TODO.
+
+### D. Conversion upgrades
+- Contact page: upgrade to a 2-step project brief (step 1: service + budget range + timeline, step 2: contact details + message), progress indicator, saved state if the user goes back, all fields optional except essentials. Budget ranges and timelines come from `site.ts`. Add budget/timeline columns usage in the API from Phase 1.
+- Booking: embed/link my booking URL if provided; else hide.
+- Floating WhatsApp click-to-chat button (only if number provided; `wa.me` link with a prefilled message; hidden on /contact; doesn't cover the cookie/consent UI or footer links on mobile).
+- Add a state "What happens next" under the form (3 steps). Only state a response-time promise if I provided one.
+- Sticky header CTA ("Book a free consultation") on desktop and mobile.
+
+### E. Navigation and footer
+Header: Services (dropdown to the 6), Work, About, Insights, Careers, Contact + CTA. Mobile: full-height accessible menu. Footer: 4 columns (company, services, resources, connect), real policy links, location, email, social icons (only provided ones), copyright.
+
+### Phase 2 acceptance
+All routes render without console errors; `/sitemap.xml` includes every published route; no placeholder text, no `#` links, no fabricated claims anywhere (grep for "TODO", "Lorem", "#"). `CONTENT_TODO.md` lists everything I still need to provide. Typecheck, build, and mobile/desktop screenshots of Home, a service page, Work empty state, Team, and Contact. Re-run Lighthouse and report numbers.
