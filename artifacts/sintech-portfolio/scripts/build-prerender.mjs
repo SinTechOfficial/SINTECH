@@ -10,6 +10,10 @@ const packageDir = path.resolve(
 const configFile = path.join(packageDir, "vite.config.ts");
 const publicDir = path.join(packageDir, "dist/public");
 const serverDir = path.join(packageDir, "dist/server");
+const rawBasePath = process.env.BASE_PATH || "/";
+const basePrefix = rawBasePath.startsWith("/")
+  ? `/${rawBasePath.replace(/^\/+|\/+$/g, "")}`
+  : `/${rawBasePath.replace(/^\.?\/+|\/+$/g, "")}`;
 
 process.env.PORT ||= "4173";
 process.env.BASE_PATH ||= "/";
@@ -26,9 +30,15 @@ function safeJson(value) {
   return JSON.stringify(value).replaceAll("<", "\\u003c");
 }
 
+function getAppPath(routePath) {
+  const prefix = basePrefix === "/" ? "" : basePrefix;
+  return routePath === "/" ? `${prefix}/` : `${prefix}${routePath}`;
+}
+
 function createHead(seo, routePath, origin) {
   const title = `${seo.title} | SinTech`;
-  const canonical = origin
+  const isNotFound = routePath === "/__not-found__";
+  const canonical = origin && !isNotFound
     ? `<link rel="canonical" href="${escapeHtml(`${origin}${routePath}`)}">`
     : "";
   const openGraphUrl = origin
@@ -41,6 +51,7 @@ function createHead(seo, routePath, origin) {
   const jsonLd = seo.jsonLd
     ? `<script id="route-jsonld" type="application/ld+json">${safeJson(seo.jsonLd)}</script>`
     : "";
+  const noindex = isNotFound ? `<meta name="robots" content="noindex, nofollow">` : "";
   return [
     `<title>${escapeHtml(title)}</title>`,
     `<meta name="description" content="${escapeHtml(seo.description)}">`,
@@ -53,6 +64,7 @@ function createHead(seo, routePath, origin) {
     `<meta name="twitter:title" content="${escapeHtml(title)}">`,
     `<meta name="twitter:description" content="${escapeHtml(seo.description)}">`,
     `<meta name="theme-color" content="#0a1224">`,
+    noindex,
     canonical,
     jsonLd,
   ]
@@ -73,7 +85,13 @@ function withSeoAndMarkup(template, markup, seo, routePath, origin) {
 }
 
 async function main() {
+  if (process.env.ANALYZE === "true") {
+    await mkdir(path.resolve(packageDir, "../../generated-artifacts"), {
+      recursive: true,
+    });
+  }
   await build({ configFile, mode: "production" });
+  process.env.SINTECH_SSR_BUILD = "true";
   await build({
     configFile,
     mode: "production",
@@ -86,6 +104,7 @@ async function main() {
       },
     },
   });
+  delete process.env.SINTECH_SSR_BUILD;
 
   const serverEntry = path.join(serverDir, "entry-server.js");
   const server = await import(
@@ -93,7 +112,8 @@ async function main() {
   );
   // Reuse the same route/content data as the application rather than keeping
   // a second, handwritten list of routes in this build script.
-  const { publicRouteSeo, getSiteOrigin, site } = server;
+  const { publicRouteSeo, getSiteOrigin, assertPublishableContent, site } = server;
+  assertPublishableContent();
   const origin = getSiteOrigin();
   const template = await readFile(path.join(publicDir, "index.html"), "utf8");
 
@@ -104,7 +124,7 @@ async function main() {
         ? path.join(publicDir, "index.html")
         : path.join(outputDir, "index.html");
     await mkdir(path.dirname(htmlPath), { recursive: true });
-    const markup = server.renderRoute(route.path);
+    const markup = await server.renderRoute(getAppPath(route.path));
     await writeFile(
       htmlPath,
       withSeoAndMarkup(template, markup, route, route.path, origin),
@@ -114,7 +134,7 @@ async function main() {
   const notFoundPath = "/__not-found__";
   const notFoundHtml = withSeoAndMarkup(
     template,
-    server.renderRoute(notFoundPath),
+    await server.renderRoute(getAppPath(notFoundPath)),
     {
       title: "Page not found",
       description: "The page you requested could not be found.",

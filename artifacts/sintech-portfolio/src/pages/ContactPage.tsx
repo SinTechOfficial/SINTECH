@@ -4,7 +4,7 @@ import { useCreateContactSubmission } from "@workspace/api-client-react";
 import type { ContactRequest } from "@workspace/api-client-react";
 import { CreateContactSubmissionBody } from "@workspace/api-zod";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { z } from "zod";
 import { PageIntro } from "../components/PageIntro";
 import { PageMeta } from "../components/PageMeta";
@@ -23,6 +23,13 @@ const contactFormSchema = CreateContactSubmissionBody.extend({
 });
 
 type ContactFormValues = z.input<typeof contactFormSchema>;
+
+// The resolver's bundled declarations pick up workspace-hoisted Zod 4 types,
+// while the shared API schema intentionally remains on Zod 3.
+const resolveContactForm = zodResolver as unknown as (
+  schema: typeof contactFormSchema,
+) => Resolver<ContactFormValues>;
+const contactFormResolver = resolveContactForm(contactFormSchema);
 
 function getErrorStatus(error: unknown): number | undefined {
   if (typeof error !== "object" || error === null) return undefined;
@@ -50,7 +57,7 @@ export function ContactPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
+    resolver: contactFormResolver,
     defaultValues: {
       service: "",
       budget: "",

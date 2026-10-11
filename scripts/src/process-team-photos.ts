@@ -14,7 +14,7 @@ const crops: Record<string, Crop> = {
   "Farhan.jpg": { left: 0.59, top: 0.28, size: 0.36 },
   "Mahbub.jpg": { left: 0.59, top: 0.3, size: 0.36 },
   "Mariea.png": { left: 0.59, top: 0.28, size: 0.36 },
-  "Nahid.jpg": { left: 0.57, top: 0.31, size: 0.36 },
+  "Nahid.jpg": { left: 0.64, top: 0.31, size: 0.28 },
   "Ratul.jpg": { left: 0.59, top: 0.38, size: 0.36 },
   "Sium.png": { left: 0.59, top: 0.29, size: 0.36 },
   "Sobuj.png": { left: 0.57, top: 0.31, size: 0.36 },
@@ -28,6 +28,13 @@ const imageDir = path.resolve(
   "../artifacts/sintech-portfolio/public/images",
 );
 const outputDir = path.join(imageDir, "team");
+
+function circularMask(size: number): Buffer {
+  const radius = size / 2;
+  return Buffer.from(
+    `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg"><circle cx="${radius}" cy="${radius}" r="${radius}" fill="white"/></svg>`,
+  );
+}
 
 async function main() {
   await fs.mkdir(outputDir, { recursive: true });
@@ -59,12 +66,14 @@ async function main() {
     await sharp(sourcePath)
       .extract(extract)
       .resize(320, 320, { fit: "cover" })
+      .composite([{ input: circularMask(320), blend: "dest-in" }])
       .webp({ quality: 80, effort: 4 })
       .toFile(path.join(outputDir, `${slug}-320.webp`));
 
     await sharp(sourcePath)
       .extract(extract)
       .resize(640, 640, { fit: "cover" })
+      .composite([{ input: circularMask(640), blend: "dest-in" }])
       .webp({ quality: 82, effort: 4 })
       .toFile(path.join(outputDir, `${slug}-640.webp`));
 
@@ -72,6 +81,7 @@ async function main() {
       .extract(extract)
       .resize(20, 20, { fit: "cover" })
       .blur(1.1)
+      .composite([{ input: circularMask(20), blend: "dest-in" }])
       .webp({ quality: 30 })
       .toFile(path.join(outputDir, `${slug}-blur.webp`));
   }

@@ -1,0 +1,2 @@
+- [Team portrait source cards](team-portrait-source-cards.md) — promotional-card photos need visually reviewed, masked crops so text does not appear in portraits.
+- [Zod resolver typing](zod-resolver-typing.md) — hoisted Zod 4 declarations can conflict with shared Zod 3 schemas in React Hook Form.

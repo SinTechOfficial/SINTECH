@@ -3,6 +3,7 @@ import { posts } from "./posts";
 import { projects } from "./projects";
 import { services } from "./services";
 import { site } from "./site";
+import { testimonials } from "./testimonials";
 
 export type RouteSeo = {
   path: string;
@@ -159,4 +160,45 @@ export function getSeoForPath(path: string): RouteSeo | undefined {
 
 export function getSiteOrigin(): string {
   return origin;
+}
+
+export function assertPublishableContent(): void {
+  const errors: string[] = [];
+  const validSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+  for (const service of services) {
+    if (!validSlug.test(service.slug)) {
+      errors.push(`Service has an invalid URL slug: ${service.slug}`);
+    }
+  }
+  for (const project of projects.filter((item) => item.published)) {
+    if (!validSlug.test(project.slug)) {
+      errors.push(`Published case study has an invalid URL slug: ${project.slug}`);
+    }
+    for (const field of ["title", "service", "summary", "problem", "approach", "solution"] as const) {
+      if (!project[field].trim()) {
+        errors.push(`Published case study "${project.slug}" is missing ${field}.`);
+      }
+    }
+  }
+  for (const post of posts.filter((item) => item.published)) {
+    if (!validSlug.test(post.slug)) {
+      errors.push(`Published article has an invalid URL slug: ${post.slug}`);
+    }
+    if (!post.title.trim() || !post.summary.trim() || !post.body?.trim()) {
+      errors.push(`Published article "${post.slug}" needs a title, summary, and final body.`);
+    }
+    if (post.date && Number.isNaN(Date.parse(post.date))) {
+      errors.push(`Published article "${post.slug}" has an invalid publication date.`);
+    }
+  }
+  for (const testimonial of testimonials.filter((item) => item.published)) {
+    if (![testimonial.quote, testimonial.name, testimonial.role, testimonial.company].every((value) => value.trim())) {
+      errors.push("A published testimonial is missing its quote or attribution.");
+    }
+  }
+
+  if (errors.length) {
+    throw new Error(`Published content is incomplete:\n- ${errors.join("\n- ")}`);
+  }
 }
