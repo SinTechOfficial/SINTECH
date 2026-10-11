@@ -9,7 +9,7 @@
 
 ## Authorized review and export
 
-- The read-only `GET /api/admin/contact-submissions` endpoint is disabled unless `ADMIN_TOKEN` is configured. Send it as a bearer token; do not put it in browser code.
+- The read-only `GET /api/admin/contacts` endpoint is disabled unless `ADMIN_TOKEN` is configured. Send it as a bearer token; do not put it in browser code.
 - Export a CSV from the configured database with `pnpm --filter @workspace/scripts run export-contacts`.
 - Treat exports as sensitive contact data. Store them only in an approved location and delete them when no longer needed.
 - A retention period and a self-service deletion process have not been supplied. Confirm both before production launch.

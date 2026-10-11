@@ -46,12 +46,16 @@ async function main() {
     .png({ compressionLevel: 9 })
     .toFile(outputLogo);
 
-  const faviconSvg = await fs.readFile(
-    path.join(publicDir, "favicon.svg"),
-  );
-  await sharp(faviconSvg).resize(32, 32).png().toFile(path.join(publicDir, "favicon-32.png"));
-  await sharp(faviconSvg).resize(192, 192).png().toFile(path.join(publicDir, "favicon-192.png"));
-  await sharp(faviconSvg).resize(180, 180).png().toFile(path.join(publicDir, "apple-touch-icon.png"));
+  // Extract hexagon emblem from new logo for high-res favicons
+  const emblemBuffer = await sharp(trimmedLogo)
+    .extract({ left: 0, top: 0, width: Math.min(280, logoMetadata.width), height: Math.min(258, logoMetadata.height) })
+    .extend({ top: 11, bottom: 11, left: 0, right: 0, background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+
+  await sharp(emblemBuffer).resize(32, 32).png().toFile(path.join(publicDir, "favicon-32.png"));
+  await sharp(emblemBuffer).resize(192, 192).png().toFile(path.join(publicDir, "favicon-192.png"));
+  await sharp(emblemBuffer).resize(180, 180).png().toFile(path.join(publicDir, "apple-touch-icon.png"));
   await sharp(Buffer.from(ogImage))
     .jpeg({ quality: 90, mozjpeg: true })
     .toFile(path.join(publicDir, "opengraph.jpg"));

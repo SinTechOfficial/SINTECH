@@ -151,6 +151,20 @@ export function ContactPage() {
           >
             {site.contactEmail}
           </a>
+          {site.bookingUrl && (
+            <div className="mt-6 border-t border-white/10 pt-5">
+              <p className="text-sm font-semibold text-white">Prefer to schedule directly?</p>
+              <a
+                href={site.bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track("booking_click")}
+                className="button-quiet mt-3 !min-h-10 !py-2 !px-4 text-xs font-semibold w-full"
+              >
+                Book online <ArrowRight size={14} />
+              </a>
+            </div>
+          )}
         </aside>
 
         <div className="surface p-6 md:p-9">
@@ -437,6 +451,40 @@ export function ContactPage() {
               )}
             </form>
           )}
+        </div>
+      </section>
+
+      <section className="container-wide pb-24 section-rule">
+        <div className="max-w-3xl">
+          <p className="eyebrow">Next steps</p>
+          <h2 className="mt-3 text-3xl font-bold">What happens next</h2>
+          <p className="mt-3 text-muted">
+            Here is what to expect after you submit your project brief:
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="surface p-6">
+            <span className="font-mono text-xs font-bold text-[#83adff]">01</span>
+            <h3 className="mt-3 text-lg font-bold">Brief Review</h3>
+            <p className="mt-2 text-sm text-muted">
+              We review your requirements, technical constraints, and desired outcomes to assemble the relevant team members.
+            </p>
+          </div>
+          <div className="surface p-6">
+            <span className="font-mono text-xs font-bold text-[#83adff]">02</span>
+            <h3 className="mt-3 text-lg font-bold">Exploratory Discussion</h3>
+            <p className="mt-2 text-sm text-muted">
+              We connect to clarify questions, examine feasibility, and define a practical scope for your goals.
+            </p>
+          </div>
+          <div className="surface p-6">
+            <span className="font-mono text-xs font-bold text-[#83adff]">03</span>
+            <h3 className="mt-3 text-lg font-bold">Tailored Proposal</h3>
+            <p className="mt-2 text-sm text-muted">
+              We outline milestones, engagement options, and deliverable commitments before any work begins.
+            </p>
+          </div>
         </div>
       </section>
     </>

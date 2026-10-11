@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "preinstall": "node ./scripts/preinstall.cjs",
+    "dev": "pnpm --filter @workspace/sintech-portfolio dev",
+    "serve": "pnpm --filter @workspace/sintech-portfolio serve",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "check": "pnpm run typecheck && pnpm --filter @workspace/api-server --filter @workspace/sintech-portfolio run build && pnpm --filter @workspace/sintech-portfolio run check:site",
     "typecheck:libs": "tsc --build",

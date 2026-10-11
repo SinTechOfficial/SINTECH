@@ -9,6 +9,16 @@ export const site = {
   analyticsSiteId: import.meta.env.VITE_ANALYTICS_SITE_ID || "",
   budgetRanges: [] as string[],
   timelines: [] as string[],
+  whatsappNumber: (import.meta.env.VITE_WHATSAPP_NUMBER as string | undefined) || "",
+  whatsappPrefill: "Hello SinTech, I would like to discuss a project.",
+  bookingUrl: (import.meta.env.VITE_BOOKING_URL as string | undefined) || "",
+  location: "Dhaka, Bangladesh",
+  socials: {
+    linkedin: "",
+    x: "",
+    facebook: "",
+    github: "",
+  },
 } as const;
 
 export const CONTENT_TODO = [

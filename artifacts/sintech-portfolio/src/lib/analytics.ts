@@ -1,4 +1,4 @@
-type EventName = "cta_click" | "contact_step_complete" | "contact_submit_success" | "whatsapp_click" | "booking_click" | "case_study_view";
+type EventName = "cta_click" | "contact_step_complete" | "contact_submit_success" | "whatsapp_click" | "booking_click" | "case_study_view" | "chatbot_open" | "chatbot_query";
 let loaded = false;
 export function track(name: EventName, props: Record<string,string> = {}) {
   if (typeof window === "undefined") return;
