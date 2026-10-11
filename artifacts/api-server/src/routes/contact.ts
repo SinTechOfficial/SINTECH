@@ -123,20 +123,21 @@ router.post(
       userAgent: req.get("user-agent")?.slice(0, 500) ?? null,
     };
 
+    let savedToDb = true;
     try {
       await db.insert(contactSubmissionsTable).values(submission);
     } catch {
-      req.log.error("Contact submission could not be saved to the database.");
-      return res.status(500).json({
-        message:
-          "We couldn't send your message right now. Please email sintech11395@gmail.com directly.",
-      });
+      savedToDb = false;
+      req.log.warn(
+        { submission: { name: submission.name, email: submission.email, service: submission.service } },
+        "Database is unavailable; proceeding with email notification fallback.",
+      );
     }
 
     await notifyContactSubmission(submission, req.log);
     return res.status(201).json({
       accepted: true,
-      message: "Thanks, your project inquiry has been saved.",
+      message: "Thanks, your project inquiry has been received.",
     });
   },
 );

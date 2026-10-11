@@ -57,7 +57,13 @@ app.use(
       ) {
         return callback(null, origin);
       }
-      if (allowedOrigins.has(origin)) return callback(null, origin);
+      if (
+        allowedOrigins.has(origin) ||
+        /^https?:\/\/([a-zA-Z0-9-]+\.)*vercel\.app$/.test(origin) ||
+        (process.env["VERCEL_URL"] && origin.includes(process.env["VERCEL_URL"]))
+      ) {
+        return callback(null, origin);
+      }
       return callback(new Error("Origin not allowed."));
     },
     credentials: false,
